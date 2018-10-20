@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { compose } from "recompose";
 
 import withLocation from './withLocation';
 import withEnigmaTable from './withEnigmaTable';
@@ -12,7 +13,6 @@ class App extends Component {
 
   render() {
     const { location, enigmaTable, satellites } = this.props;
-
     console.log('We need you here', satellites);
 
     return (
@@ -32,4 +32,8 @@ class App extends Component {
   }
 }
 
-export default withEnigmaTable(withLocation(withSatellites(App)));
+export default compose(
+  withSatellites,
+  withLocation,
+  withEnigmaTable,
+)(App);

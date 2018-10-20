@@ -21,7 +21,6 @@ const withEnigmaTable = (WrappedComponent) => {
           const rows = payload.table_rows.rows;
           const raw_table = rows.map(function (row) {
             return _.zipObject(headers, row);
-
           })
 
           // todo: replace with ramda lens
