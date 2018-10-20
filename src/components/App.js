@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import withLocation from './withLocation';
 import withEnigmaTable from './withEnigmaTable';
+import withSatellites from './withSatellites';
 
 class App extends Component {
 
@@ -9,11 +10,10 @@ class App extends Component {
 
   }
 
-
   render() {
-    const { location, enigmaTable } = this.props;
+    const { location, enigmaTable, satellites } = this.props;
 
-    console.log(enigmaTable);
+    console.log('We need you here', satellites);
 
     return (
       <div className="App">
@@ -32,4 +32,4 @@ class App extends Component {
   }
 }
 
-export default withEnigmaTable(withLocation(App));
+export default withEnigmaTable(withLocation(withSatellites(App)));
