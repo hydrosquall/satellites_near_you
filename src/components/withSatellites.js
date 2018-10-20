@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import _ from 'lodash';
+// import _ from 'lodash';
 // import { isoParse } from 'd3-time-format';
 
 // Harcoded as a fallback
@@ -18,7 +18,7 @@ const withSatellites = (WrappedComponent) => {
 
       const { latitude, longitude } = this.props;
       const altitude = 0;
-      const radius = 20; // degrees
+      const radius = 90; // degrees
       const category_id = 0; // 0 includes all cats
 
       const url = `${SATELLITE_BASE}/${latitude}/${longitude}/${altitude}/${radius}/${category_id}/&apiKey=${API_KEY}`;
