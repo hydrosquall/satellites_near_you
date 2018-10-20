@@ -32,11 +32,6 @@ const withLocation = (WrappedComponent) => {
       }
     }
 
-    getLocation = async () => {
-      const response = await this.getLocationPromise().then(result => result);
-      return response;
-    }
-
     render() {
       return  <WrappedComponent location={this.state.location} {...this.props}/>
     }

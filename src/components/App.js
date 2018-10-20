@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import withLocation from './withLocation';
+import withEnigmaTable from './withEnigmaTable';
 
 class App extends Component {
 
@@ -10,16 +11,25 @@ class App extends Component {
 
 
   render() {
-    const { location } = this.props;
+    const { location, enigmaTable } = this.props;
+
+    console.log(enigmaTable);
 
     return (
       <div className="App">
           <p>
             Current Location: {location.latitude}, {location.longitude}
           </p>
+          <ul>
+            {
+              enigmaTable.map(row => {
+              return (<li>{row.type_of_orbit}</li>)
+              })
+            }
+          </ul>
       </div>
     );
   }
 }
 
-export default withLocation(App);
+export default withEnigmaTable(withLocation(App));

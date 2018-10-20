@@ -1,5 +1,3 @@
-
-
 const initialState = {};
 
 const spaceReducer = (state=initialState, action) => {
