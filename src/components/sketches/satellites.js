@@ -168,7 +168,7 @@ export default function sketch(p) {
     setGradient(1000, 0, p.width, gradientHeight, c1, c2, c3);
   }
 
-  const drawEverything = () => {
+  const drawData = () => {
     drawBackground();
     const margin = 40;
     p.translate(margin, margin);
@@ -192,6 +192,7 @@ export default function sketch(p) {
     // const x = sats.map(sat => p.random(xMin, xMax));
     // const y = sats.map(sat => yScale(sat.satalt));
 
+    // Draw SATELLITES
     p.noStroke()
     const flatX = flatten(x);
     const flatY = flatten(y);
@@ -199,25 +200,28 @@ export default function sketch(p) {
       drawSatellite(flatX[i], flatY[i], sat);
     });
 
+    // Draw Orbital Stripes
     p.stroke(255);
     p.line(p.width * 3 / 4, 1250, p.width, 1250);
     p.line(p.width * 3 / 4, 2500, p.width, 2500);
-    p.line(p.width * 3 / 4, 3750, p.width, 3750);
+    p.push();
+    p.textSize(24);
+    p.textAlign(p.RIGHT);
+    p.text('Lower Earth Orbit (LEO)', p.width - 60, 3750 - 60);
+    p.text('Medium Earth Orbit (MEO)', p.width - 60, 2500 - 20);
+    p.text('Geosynchronous Equatorial Orbit (GEO)', p.width - 60, 1250 - 20);
+    p.pop();
   }
 
-  p.mouseClicked = () => {
-    console.log('clicked', p.mouseX, p.mouseY);
-  }
 
-  p.draw = () => {
-    drawEverything();
-
+  const drawTooltip = () => {
     const margin = MARGIN;
     const wing = { 'w': 30, 'h': 18 };
     const radius = 20;
 
     const rectColor = p.color('rgba(10,10,10,.8)');
 
+    // TODO: speed up the element lookup with a d3 quadtree
     for (const i in cats) {
       for (const j in cats[i]) {
         p.fill(rectColor);
@@ -227,30 +231,44 @@ export default function sketch(p) {
         const satY = y[i][j];
         const cat = cats[i][j];
 
-        if (p.mouseX - margin >= satX - wing.w - radius / 2 &&
-            p.mouseX - margin <= satX + radius / 2 + wing.w &&
-            p.mouseY - margin >= satY - (wing.h / 2) &&
-            p.mouseY - margin <= satY + (wing.h / 2)) {
+        const isMouseOnSatellite = (
+          p.mouseX - margin >= satX - wing.w - radius / 2 &&
+          p.mouseX - margin <= satX + radius / 2 + wing.w &&
+          p.mouseY - margin >= satY - (wing.h / 2) &&
+          p.mouseY - margin <= satY + (wing.h / 2));
 
-          const boxAnchorX = satX;
-          const boxAnchorY = satY + 30;
-          p.rect(boxAnchorX - 150, boxAnchorY - 260, 300, 200, 10);
+        if (isMouseOnSatellite) {
+          const boxAnchorX = p.mouseX;
+          const boxAnchorY = p.mouseY;
+
+          var maxLength = cat.operator_owner.length;
+          var rectWidth = (maxLength > 20 ? 250 + 5 * maxLength : 300);
+          p.rect(boxAnchorX - 150, boxAnchorY - 200, rectWidth, 140, 10);
 
           p.fill('#fcd45a');
           p.textSize(20);
           p.textStyle(p.BOLD);
 
-          p.text(cat.satname, boxAnchorX - 135, boxAnchorY - 230);
-
+          p.text(cat.satname, boxAnchorX - 135, boxAnchorY - 170);
           p.fill(255);
           p.textSize(16);
           p.textStyle(p.NORMAL);
-          p.text('operator:\t\t\t\t' + cat.operator_owner, boxAnchorX - 135, boxAnchorY - 210);
-          p.text('country:\t\t\t\t\t' + cat.country_org_of_un_registry, boxAnchorX - 135, boxAnchorY - 190);
-          p.text('launch mass:\t' + cat.launch_mass_kg + ' kg', boxAnchorX - 135, boxAnchorY - 170);
-          p.text('launch date: \t' + cat.launchDate, boxAnchorX - 135, boxAnchorY - 150);
+          p.text('operator:\t\t\t\t' + cat.operator_owner, boxAnchorX - 135, boxAnchorY - 150);
+          p.text('country:\t\t\t\t\t' + cat.country_org_of_un_registry, boxAnchorX - 135, boxAnchorY - 130);
+          p.text('launch mass:\t' + cat.launch_mass_kg + ' kg', boxAnchorX - 135, boxAnchorY - 110);
+          p.text('launch date: \t' + cat.launchDate, boxAnchorX - 135, boxAnchorY - 90);
+
+          return; // bail out early
         }
       }
     }
+
+  }
+
+
+  p.draw = () => {
+    drawData();
+
+    drawTooltip();
   };
 };
