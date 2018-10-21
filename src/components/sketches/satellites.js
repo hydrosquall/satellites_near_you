@@ -1,5 +1,6 @@
-import { scaleLinear } from 'd3-scale';
-import { extent } from 'd3-array';
+// import { scaleLinear } from 'd3-scale';
+// import { extent } from 'd3-array';
+import { flatten } from 'lodash';
 
 const CANVAS_WIDTH = window.innerWidth;
 const CANVAS_HEIGHT = 3000;
@@ -38,12 +39,13 @@ export default function sketch(p) {
   let sats = [];
   let x = [];
   let y = [];
+  let cats = [];
 
   p.myCustomRedrawAccordingToNewPropsHandler = (props) => {
     if (props.satellites && props.satellites.length > 0) {
       sats = props.satellites;
-      const categories = getSatelliteCategories();
-      const [tempX, tempY] = getCoordinates(categories);
+      cats = getSatelliteCategories();
+      const [tempX, tempY] = getCoordinates(cats);
       x = tempX;
       y = tempY;
     }
@@ -51,30 +53,32 @@ export default function sketch(p) {
 
 
   const getSatelliteCategories = () => {
-    const cats  = [[], [], []]; // TODO: parametrize num categories
-
+    const localCats  = [[], [], []]; // TODO: parametrize num categories
     for (const i in sats) {
       if (sats[i].satalt < 1000) {
-        cats[0].push(sats[i]);
+        localCats[0].push(sats[i]);
       } else if (sats[i].satalt < 30000) {
-        cats[1].push(sats[i]);
+        localCats[1].push(sats[i]);
       } else {
-        cats[2].push(sats[i]);
+        localCats[2].push(sats[i]);
       }
     }
-
-    return cats;
+    return localCats;
   }
 
   const getCoordinates = (categories) => {
     const x = [];
-    const y = []
+    const y = [];
 
     for (const i in categories) {
+      const xLocal = [];
+      const yLocal = [];
       for (const j in categories[i]) {
-        x.push(p.random(0, p.width - MARGIN * 2));
-        y.push(p.random((2 - i) * 1250 + 50, (3 - i) * 1250 - 50));
+        xLocal.push(p.random(0, p.width - MARGIN * 2));
+        yLocal.push(p.random((2 - i) * 1250 + 50, (3 - i) * 1250 - 50));
       }
+      x.push(xLocal);
+      y.push(yLocal);
     }
 
     return [x, y];
@@ -86,16 +90,15 @@ export default function sketch(p) {
     // p.background(c2);
     // p.noLoop(); // frameRate(30); // TBD whether to keep this
 
-    p.frameRate(30);
+    p.frameRate(50);
 
     p.rectMode(p.CORNER);
     p.noStroke();
 
-    const categories = getSatelliteCategories();
-    const [tempX, tempY] = getCoordinates(categories);
+    cats = getSatelliteCategories();
+    const [tempX, tempY] = getCoordinates(cats);
     x = tempX;
     y = tempY;
-    // p.textSize(20);
   };
 
   const drawSatellite = (x, y, sat) => {
@@ -116,6 +119,21 @@ export default function sketch(p) {
     p.ellipse(x, y, radius * .8, radius * .8);
     p.fill('white');
     p.ellipse(x, y, 2, 2);
+
+    const launchYear = sat.launchYear;
+    // Add STRIPES
+    if (launchYear <= 1979) {
+      p.rect(x - wing.w * 2 / 3 - radius / 2 + 3, y - (wing.h / 2), 3, wing.h);
+    }
+    if (launchYear <= 1989) {
+      p.rect(x - wing.w * 1 / 3 - radius / 2, y - (wing.h / 2), 3, wing.h);
+    }
+    if (launchYear <= 1999) {
+      p.rect(x + wing.w * 1 / 3 + radius / 2, y - (wing.h / 2), 3, wing.h);
+    }
+    if (launchYear <= 2009) {
+      p.rect(x + wing.w * 2 / 3 + radius / 2 - 3, y - (wing.h / 2), 3, wing.h);
+    }
   }
 
   const setGradient = (x, y, w, h, c1, c2, c3) =>{
@@ -175,8 +193,10 @@ export default function sketch(p) {
     // const y = sats.map(sat => yScale(sat.satalt));
 
     p.noStroke()
+    const flatX = flatten(x);
+    const flatY = flatten(y);
     sats.forEach((sat, i) => {
-      drawSatellite(x[i], y[i], sat);
+      drawSatellite(flatX[i], flatY[i], sat);
     });
 
     p.stroke(255);
@@ -185,7 +205,52 @@ export default function sketch(p) {
     p.line(p.width * 3 / 4, 3750, p.width, 3750);
   }
 
+  p.mouseClicked = () => {
+    console.log('clicked', p.mouseX, p.mouseY);
+  }
+
   p.draw = () => {
     drawEverything();
+
+    const margin = MARGIN;
+    const wing = { 'w': 30, 'h': 18 };
+    const radius = 20;
+
+    const rectColor = p.color('rgba(10,10,10,.8)');
+
+    for (const i in cats) {
+      for (const j in cats[i]) {
+        p.fill(rectColor);
+        p.noStroke();
+
+        const satX = x[i][j];
+        const satY = y[i][j];
+        const cat = cats[i][j];
+
+        if (p.mouseX - margin >= satX - wing.w - radius / 2 &&
+            p.mouseX - margin <= satX + radius / 2 + wing.w &&
+            p.mouseY - margin >= satY - (wing.h / 2) &&
+            p.mouseY - margin <= satY + (wing.h / 2)) {
+
+          const boxAnchorX = satX;
+          const boxAnchorY = satY + 30;
+          p.rect(boxAnchorX - 150, boxAnchorY - 260, 300, 200, 10);
+
+          p.fill('#fcd45a');
+          p.textSize(20);
+          p.textStyle(p.BOLD);
+
+          p.text(cat.satname, boxAnchorX - 135, boxAnchorY - 230);
+
+          p.fill(255);
+          p.textSize(16);
+          p.textStyle(p.NORMAL);
+          p.text('operator:\t\t\t\t' + cat.operator_owner, boxAnchorX - 135, boxAnchorY - 210);
+          p.text('country:\t\t\t\t\t' + cat.country_org_of_un_registry, boxAnchorX - 135, boxAnchorY - 190);
+          p.text('launch mass:\t' + cat.launch_mass_kg + ' kg', boxAnchorX - 135, boxAnchorY - 170);
+          p.text('launch date: \t' + cat.launchDate, boxAnchorX - 135, boxAnchorY - 150);
+        }
+      }
+    }
   };
 };

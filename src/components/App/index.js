@@ -46,11 +46,12 @@ class AppContainer extends Component {
 
     satellites = satellites.map(sat => {
       const launchDate = isoParse(sat.date_of_launch);
+      const launchYear = launchDate.getFullYear();
       return {
         ...sat,
-        age: thisYear - launchDate.getFullYear(),
+        age: thisYear - launchYear,
+        launchYear: launchYear,
       }
-
     });
 
     console.log(satellites);
