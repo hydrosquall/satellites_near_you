@@ -11,7 +11,7 @@ import AppView from './view';
 
 import FIXTURE_SATELLITES from '../../fixtures/satellites';
 
-const USE_FIXTURES = true;
+const USE_FIXTURES = false;
 
 class AppContainer extends Component {
 

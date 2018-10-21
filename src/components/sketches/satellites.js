@@ -1,5 +1,3 @@
-import FIXTURE_SATELLITES from '../../fixtures/satellites';
-
 import { scaleLinear } from 'd3-scale';
 import { extent } from 'd3-array';
 
@@ -18,10 +16,10 @@ const USER_CATEGORY = {
 }
 
 const USER_COLOR_MAP = {
-  [USER_CATEGORY.commercial]: ['rgba(19,212,233,.6)', 'rgba(19,212,233,1)'],
-  [USER_CATEGORY.government]: ['rgba(255,232,83,.6)', 'rgba(255,232,83,1)'],
-  [USER_CATEGORY.military]: ['rgba(83,120,56,.6)', 'rgba(83,120,56,1)'],
-  [USER_CATEGORY.civil]: ['rgba(228,104,85,.6)', 'rgba(228,104,85,1)'],
+  [USER_CATEGORY.commercial]: ['rgba(19,212,233,0.6)', 'rgba(19,212,233,1)'],
+  [USER_CATEGORY.government]: ['rgba(255,232,83,0.6)', 'rgba(255,232,83,1)'],
+  [USER_CATEGORY.military]: ['rgba(83,120,56,0.6)', 'rgba(83,120,56,1)'],
+  [USER_CATEGORY.civil]: ['rgba(228,104,85,0.6)', 'rgba(228,104,85,1)'],
 }
 
 const getSatelliteUser = (satellite) => {
@@ -50,7 +48,7 @@ export default function sketch(p) {
     p.createCanvas(1040, 3000);
 
     p.background(c2);
-    p.noLoop(); // frameRate(30); // TBD whether to keep this
+    // p.noLoop(); // frameRate(30); // TBD whether to keep this
 
     p.rectMode(p.CORNER);
     p.noStroke();
