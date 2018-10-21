@@ -54,9 +54,11 @@ class AppContainer extends Component {
       }
     });
 
-    console.log(satellites);
+    // console.log(satellites);
+    const { satellites:rawSatellites } = this.props;
     return <AppView
               {...this.props}
+              numSatellites={rawSatellites.length}
               satellites={satellites}
             />
   }

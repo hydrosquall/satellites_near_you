@@ -11,24 +11,25 @@ import styles from './styles.module.scss';
 class AppView extends Component {
 
   render() {
-    const { location, satellites } = this.props;
+    const { location, satellites, numSatellites } = this.props;
     const hasSatellites = satellites.length > 0;
 
     return (
       <>
       <div className={styles.app}>
-        <Header location={location} satellites={satellites}/>
+        <Header location={location} satellites={satellites} numSatellites={numSatellites}/>
       </div>
         {hasSatellites ? <P5Wrapper sketch={sketch} satellites={satellites}/>
                        : <div className={styles.loader}>
-                          <p> Satellites are spinning overhead, stand by... </p>
+                          <p> Satellites are closer than they appear, please stand by... </p>
                           <ul className={styles.spinner}>
                             <li></li>
                             <li></li>
                             <li></li>
                             <li></li>
                           </ul>
-                       </div>  }
+                       </div>
+        }
       </>
     );
   }
