@@ -3,7 +3,7 @@
 import { flatten } from 'lodash';
 
 const CANVAS_WIDTH = window.innerWidth;
-const CANVAS_HEIGHT = 3000;
+const CANVAS_HEIGHT = 3750;
 
 const WING_COLOR = '#d2d2d2';
 const MARGIN = 40;
@@ -207,7 +207,7 @@ export default function sketch(p) {
     p.push();
     p.textSize(24);
     p.textAlign(p.RIGHT);
-    p.text('Lower Earth Orbit (LEO)', p.width - 60, 3750 - 60);
+    p.text('Lower Earth Orbit (LEO)', p.width - 60, CANVAS_HEIGHT - 60);
     p.text('Medium Earth Orbit (MEO)', p.width - 60, 2500 - 20);
     p.text('Geosynchronous Equatorial Orbit (GEO)', p.width - 60, 1250 - 20);
     p.pop();
