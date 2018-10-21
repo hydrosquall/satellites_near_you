@@ -6,7 +6,7 @@ const X_AXIS = 2;
 const c1 = '#3c3b52';
 const c2 = '#252233';
 
-const CANVAS_WIDTH = window.innerWidth - 80;
+const CANVAS_WIDTH = window.innerWidth;
 const CANVAS_HEIGHT = 3000;
 
 const WING_COLOR = '#d2d2d2';
@@ -78,10 +78,40 @@ export default function sketch(p) {
     p.ellipse(x, y, 2, 2);
   }
 
-  p.draw = () => {
-    p.background(c2);
+  const setGradient = (x, y, w, h, c1, c2, c3) =>{
+    p.noFill();
 
-    // Set the left and top margin
+    for (var i = y; i <= y + h; i++) {
+      var inter = p.map(i, y, y + h, 0, 1);
+      var c = p.lerpColor(c1, c2, inter);
+      p.stroke(c);
+      p.line(x, i, x + w, i);
+    }
+
+    var updated_y = y + h;
+
+    for (var i = updated_y; i <= updated_y + h; i++) {
+      var inter = p.map(i, updated_y, updated_y + h, 0, 1);
+      var c = p.lerpColor(c2, c3, inter);
+      p.stroke(c);
+      p.line(x, i, x + w, i);
+    }
+  }
+
+  const drawBackground = () => {
+    const c1 = p.color(60, 59, 82);
+    const c2 = p.color(154, 91, 102);
+    const c3 = p.color(160, 216, 236);
+
+    const gradientHeight = p.height / 2;
+
+    setGradient(0, 0, p.width, gradientHeight, c1, c2, c3);
+    setGradient(500, 0, p.width, gradientHeight, c1, c2, c3);
+    setGradient(1000, 0, p.width, gradientHeight, c1, c2, c3);
+  }
+
+  const drawEverything = () => {
+    drawBackground();
     const margin = 40;
     p.translate(margin, margin);
 
@@ -107,5 +137,10 @@ export default function sketch(p) {
     sats.forEach((sat, i) => {
       drawSatellite(x[i], y[i], sat);
     });
+  }
+
+  p.draw = () => {
+    drawEverything();
+
   };
 };
