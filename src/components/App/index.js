@@ -8,10 +8,17 @@ import withSatellites from '../withSatellites';
 
 import AppView from './view';
 
+import FIXTURE_SATELLITES from '../../fixtures/satellites';
+
+const USE_FIXTURES = true;
 
 class AppContainer extends Component {
 
   getEnhancedSatellites = () => {
+    if (USE_FIXTURES) {
+      return FIXTURE_SATELLITES;
+    }
+
     const { satellites, enigmaTable } = this.props;
 
     const satelliteIds = enigmaTable.map(sat => sat.norad_number);
