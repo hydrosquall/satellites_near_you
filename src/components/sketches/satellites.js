@@ -6,7 +6,7 @@ const X_AXIS = 2;
 const c1 = '#3c3b52';
 const c2 = '#252233';
 
-const CANVAS_WIDTH = 1040;
+const CANVAS_WIDTH = window.innerWidth - 80;
 const CANVAS_HEIGHT = 3000;
 
 const WING_COLOR = '#d2d2d2';
@@ -91,7 +91,7 @@ export default function sketch(p) {
       .domain([300, 40000]) // vs calculating based on empirical data
       .range([yMin, yMax]);
 
-    const xMin = 0;
+    const xMin = margin;
     const xMax = p.width - margin * 2;
 
     const xDomain = extent(sats, sat => sat.age)

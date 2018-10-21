@@ -15,10 +15,12 @@ class AppView extends Component {
     const hasSatellites = satellites.length > 0;
 
     return (
+      <>
       <div className={styles.app}>
         <Header location={location} satellites={satellites}/>
-        {hasSatellites && <P5Wrapper sketch={sketch} satellites={satellites}/>}
       </div>
+        {hasSatellites && <P5Wrapper sketch={sketch} satellites={satellites}/>}
+      </>
     );
   }
 }
