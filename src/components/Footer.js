@@ -12,7 +12,6 @@ const Footer = ({ satellites, location, numSatellites}) => {
       <p>
         Location: ({formatNumber(location.latitude, 2)}, {formatNumber(location.longitude, 2)})
       </p>
-      <p>
     </>
     );
 }

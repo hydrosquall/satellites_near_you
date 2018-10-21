@@ -29,7 +29,7 @@ class Header  extends React.Component {
 
                           <div className='section2'>
                             <h2 className={styles.secondHeader}> Visual Glossary </h2>
-                            <img src={require('./gloassary.png')} width={window.innerWidth}/>
+                            <img src={require('./glossary-new.png')} width={window.innerWidth}/>
                             {/* <img src={require('./glossary.svg')}/> */}
                           </div>
                             <br/>
