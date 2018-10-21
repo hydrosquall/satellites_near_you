@@ -6,6 +6,9 @@ const X_AXIS = 2;
 const c1 = '#3c3b52';
 const c2 = '#252233';
 
+const CANVAS_WIDTH = 1040;
+const CANVAS_HEIGHT = 3000;
+
 const WING_COLOR = '#d2d2d2';
 
 const USER_CATEGORY = {
@@ -45,7 +48,7 @@ export default function sketch(p) {
   };
 
   p.setup = function () {
-    p.createCanvas(1040, 3000);
+    p.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 
     p.background(c2);
     // p.noLoop(); // frameRate(30); // TBD whether to keep this
