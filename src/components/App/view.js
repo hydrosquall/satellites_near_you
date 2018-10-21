@@ -6,6 +6,7 @@ import P5Wrapper from '../P5Wrapper'; // custom fork
 import sketch from '../sketches/satellites';
 
 import Header from '../Header';
+import Footer from '../Footer';
 import styles from './styles.module.scss';
 
 class AppView extends Component {
@@ -16,9 +17,7 @@ class AppView extends Component {
 
     return (
       <>
-      <div className={styles.app}>
-        <Header location={location} satellites={satellites} numSatellites={numSatellites}/>
-      </div>
+        <Header/>
         {hasSatellites ? <P5Wrapper sketch={sketch} satellites={satellites}/>
                        : <div className={styles.loader}>
                           <p> Satellites are closer than they appear, please stand by... </p>
@@ -30,6 +29,9 @@ class AppView extends Component {
                           </ul>
                        </div>
         }
+        <div className={styles.app}>
+          <Footer location={location} satellites={satellites} numSatellites={numSatellites} />
+        </div>
       </>
     );
   }

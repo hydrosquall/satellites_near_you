@@ -12,3 +12,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+
+.section1 {
+  background: linear-gradient(60deg, #252233, #3C3B52);
+  position: relative;
+  margin-top: auto;
+  padding: 100px;
+
+}
+
+.section2 {
+  background: #F2F2F2;
+  margin-top: auto;
+}
+
+svg #bg {
+  position: relative;
+  z-index: 1;
+}

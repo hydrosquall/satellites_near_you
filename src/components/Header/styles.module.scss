@@ -1,0 +1,37 @@
+
+.mainHeader {
+  color:white;
+  font-size: 75px;
+  line-height: 1.1;
+  letter-spacing: 2px;
+  font-family: 'Days One', sans-serif;
+  position:relative;
+  margin-top:-900px;
+  position: absolute;
+  z-index:10;
+  padding: 100px;
+}
+
+.secondHeader {
+  color:#3e3e50;
+  font-size: 36px;
+  line-height: 1.1;
+  letter-spacing: 2px;
+  font-family: 'Days One', sans-serif;
+    padding: 100px;
+}
+
+svg #glossary {
+position: relative;
+z-index: 1;
+}
+
+.leadText {
+    color:white;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.8;
+    position: relative;
+      margin-top:-650px;
+    z-index:10;
+      padding: 100px;
+}
