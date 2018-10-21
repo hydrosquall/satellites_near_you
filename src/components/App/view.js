@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { formatNumber } from 'humanize-plus';
+
 import styles from './styles.module.scss';
 
 class AppView extends Component {
@@ -13,7 +15,7 @@ class AppView extends Component {
 
         <h1>Satellites Overhead</h1>
         <p>
-          {satellites.length} satellites over your location ({location.latitude}, {location.longitude})
+          {satellites.length} satellites over your location ({formatNumber(location.latitude, 2)}, {formatNumber(location.longitude, 2)})
         </p>
 
         <ul>
