@@ -19,7 +19,16 @@ class AppView extends Component {
       <div className={styles.app}>
         <Header location={location} satellites={satellites}/>
       </div>
-        {hasSatellites && <P5Wrapper sketch={sketch} satellites={satellites}/>}
+        {hasSatellites ? <P5Wrapper sketch={sketch} satellites={satellites}/>
+                       : <div className={styles.loader}>
+                          <p> Satellites are spinning overhead, stand by... </p>
+                          <ul className={styles.spinner}>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                          </ul>
+                       </div>  }
       </>
     );
   }
