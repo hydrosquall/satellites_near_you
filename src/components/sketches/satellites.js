@@ -1,15 +1,11 @@
 import { scaleLinear } from 'd3-scale';
 import { extent } from 'd3-array';
 
-const Y_AXIS = 1;
-const X_AXIS = 2;
-const c1 = '#3c3b52';
-const c2 = '#252233';
-
 const CANVAS_WIDTH = window.innerWidth;
 const CANVAS_HEIGHT = 3000;
 
 const WING_COLOR = '#d2d2d2';
+const MARGIN = 40;
 
 const USER_CATEGORY = {
   commercial: 'Commercial',
@@ -40,22 +36,66 @@ const getSatelliteUser = (satellite) => {
 
 export default function sketch(p) {
   let sats = [];
+  let x = [];
+  let y = [];
 
   p.myCustomRedrawAccordingToNewPropsHandler = (props) => {
     if (props.satellites && props.satellites.length > 0) {
       sats = props.satellites;
+      const categories = getSatelliteCategories();
+      const [tempX, tempY] = getCoordinates(categories);
+      x = tempX;
+      y = tempY;
     }
   };
+
+
+  const getSatelliteCategories = () => {
+    const cats  = [[], [], []]; // TODO: parametrize num categories
+
+    for (const i in sats) {
+      if (sats[i].satalt < 1000) {
+        cats[0].push(sats[i]);
+      } else if (sats[i].satalt < 30000) {
+        cats[1].push(sats[i]);
+      } else {
+        cats[2].push(sats[i]);
+      }
+    }
+
+    return cats;
+  }
+
+  const getCoordinates = (categories) => {
+    const x = [];
+    const y = []
+
+    for (const i in categories) {
+      for (const j in categories[i]) {
+        x.push(p.random(0, p.width - MARGIN * 2));
+        y.push(p.random((2 - i) * 1250 + 50, (3 - i) * 1250 - 50));
+      }
+    }
+
+    return [x, y];
+  }
 
   p.setup = function () {
     p.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    p.background(c2);
+    // p.background(c2);
     // p.noLoop(); // frameRate(30); // TBD whether to keep this
+
+    p.frameRate(30);
 
     p.rectMode(p.CORNER);
     p.noStroke();
-    p.textSize(20);
+
+    const categories = getSatelliteCategories();
+    const [tempX, tempY] = getCoordinates(categories);
+    x = tempX;
+    y = tempY;
+    // p.textSize(20);
   };
 
   const drawSatellite = (x, y, sat) => {
@@ -115,14 +155,14 @@ export default function sketch(p) {
     const margin = 40;
     p.translate(margin, margin);
 
-    const yMin = p.height - margin * 2;
+    const yMin = p.height - MARGIN * 2;
     const yMax = 0;
     const yScale = scaleLinear()
       .domain([300, 40000]) // vs calculating based on empirical data
       .range([yMin, yMax]);
 
-    const xMin = margin;
-    const xMax = p.width - margin * 2;
+    const xMin = MARGIN;
+    const xMax = p.width - MARGIN * 2;
 
     const xDomain = extent(sats, sat => sat.age)
 
@@ -130,9 +170,10 @@ export default function sketch(p) {
       .domain(xDomain) // vs calculating based on empirical data
       .range([xMin, xMax]);
 
-    const x = sats.map(sat => xScale(sat.age));
+    // const x = sats.map(sat => xScale(sat.age));
     // const x = sats.map(sat => p.random(xMin, xMax));
-    const y = sats.map(sat => yScale(sat.satalt));
+    // const y = sats.map(sat => yScale(sat.satalt));
+
 
     sats.forEach((sat, i) => {
       drawSatellite(x[i], y[i], sat);
@@ -141,6 +182,5 @@ export default function sketch(p) {
 
   p.draw = () => {
     drawEverything();
-
   };
 };
