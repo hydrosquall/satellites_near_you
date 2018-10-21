@@ -174,10 +174,16 @@ export default function sketch(p) {
     // const x = sats.map(sat => p.random(xMin, xMax));
     // const y = sats.map(sat => yScale(sat.satalt));
 
-
+    p.noStroke()
     sats.forEach((sat, i) => {
       drawSatellite(x[i], y[i], sat);
     });
+
+    p.stroke(255);
+
+    p.line(p.width * 3 / 4, 1250, p.width, 1250);
+    p.line(p.width * 3 / 4, 2500, p.width, 2500);
+    p.line(p.width * 3 / 4, 3750, p.width, 3750);
   }
 
   p.draw = () => {
