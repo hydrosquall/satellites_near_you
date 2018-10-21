@@ -1,6 +1,7 @@
 import FIXTURE_SATELLITES from '../../fixtures/satellites';
 
 import { scaleLinear } from 'd3-scale';
+import { extent } from 'd3-array';
 
 const Y_AXIS = 1;
 const X_AXIS = 2;
@@ -50,9 +51,6 @@ export default function sketch(p) {
     const margin = 40;
     p.translate(margin, margin);
 
-    const x = [];
-    const y = [];
-
     const yMin = p.height - margin * 2;
     const yMax = 0;
     const yScale = scaleLinear()
@@ -61,10 +59,16 @@ export default function sketch(p) {
 
     const xMin = 0;
     const xMax = p.width - margin * 2;
-    sats.forEach(sat => {
-      x.push(p.random(xMin, xMax ));
-      y.push(yScale(sat.satalt)); // altitude
-    });
+
+    const xDomain = extent(sats, sat => sat.age)
+
+    const xScale = scaleLinear()
+      .domain(xDomain) // vs calculating based on empirical data
+      .range([xMin, xMax]);
+
+    const x = sats.map(sat => xScale(sat.age));
+    // const x = sats.map(sat => p.random(xMin, xMax));
+    const y = sats.map(sat => yScale(sat.satalt));
 
     sats.forEach((sat, i) => {
       drawSatellite(x[i], y[i]);

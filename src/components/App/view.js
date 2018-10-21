@@ -18,18 +18,6 @@ class AppView extends Component {
       <div className={styles.app}>
         <Header location={location} satellites={satellites}/>
         {hasSatellites && <P5Wrapper sketch={sketch} satellites={satellites}/>}
-
-        {/* <ul>
-          {
-            satellites.map((row, i) => {
-              return (
-                <li key={i}>
-                  {row.satname}
-                </li>
-              )
-            })
-          }
-        </ul> */}
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from "recompose";
 import { zipObject } from 'lodash';
+import { isoParse } from 'd3-time-format';
 
 import withLocation from '../withLocation';
 import withEnigmaTable from '../withEnigmaTable';
@@ -37,9 +38,25 @@ class AppContainer extends Component {
   }
 
   render () {
+
+    let satellites = this.getEnhancedSatellites();
+    const today = new Date();
+    const thisYear = today.getFullYear(); // or get num days...
+
+
+    satellites = satellites.map(sat => {
+      const launchDate = isoParse(sat.date_of_launch);
+      return {
+        ...sat,
+        age: thisYear - launchDate.getFullYear(),
+      }
+
+    });
+
+    console.log(satellites);
     return <AppView
               {...this.props}
-              satellites={this.getEnhancedSatellites()}
+              satellites={satellites}
             />
   }
 }
