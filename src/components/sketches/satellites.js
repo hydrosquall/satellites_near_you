@@ -155,20 +155,20 @@ export default function sketch(p) {
     const margin = 40;
     p.translate(margin, margin);
 
-    const yMin = p.height - MARGIN * 2;
-    const yMax = 0;
-    const yScale = scaleLinear()
-      .domain([300, 40000]) // vs calculating based on empirical data
-      .range([yMin, yMax]);
+    // const yMin = p.height - MARGIN * 2;
+    // const yMax = 0;
+    // const yScale = scaleLinear()
+    //   .domain([300, 40000]) // vs calculating based on empirical data
+    //   .range([yMin, yMax]);
 
-    const xMin = MARGIN;
-    const xMax = p.width - MARGIN * 2;
+    // const xMin = MARGIN;
+    // const xMax = p.width - MARGIN * 2;
 
-    const xDomain = extent(sats, sat => sat.age)
+    // const xDomain = extent(sats, sat => sat.age)
 
-    const xScale = scaleLinear()
-      .domain(xDomain) // vs calculating based on empirical data
-      .range([xMin, xMax]);
+    // const xScale = scaleLinear()
+    //   .domain(xDomain) // vs calculating based on empirical data
+    //   .range([xMin, xMax]);
 
     // const x = sats.map(sat => xScale(sat.age));
     // const x = sats.map(sat => p.random(xMin, xMax));
@@ -180,7 +180,6 @@ export default function sketch(p) {
     });
 
     p.stroke(255);
-
     p.line(p.width * 3 / 4, 1250, p.width, 1250);
     p.line(p.width * 3 / 4, 2500, p.width, 2500);
     p.line(p.width * 3 / 4, 3750, p.width, 3750);
