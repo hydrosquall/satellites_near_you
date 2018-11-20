@@ -8,6 +8,10 @@ const CANVAS_HEIGHT = 3750;
 const WING_COLOR = '#d2d2d2';
 const MARGIN = 40;
 
+// Configure how the satellite is drawn
+const satelliteWing = { 'w': 30, 'h': 18 };
+const satelliteRadius = 20;
+
 const USER_CATEGORY = {
   commercial: 'Commercial',
   government: 'Government',
@@ -102,37 +106,34 @@ export default function sketch(p) {
   };
 
   const drawSatellite = (x, y, sat) => {
-    const radius = 20;
-    const wing = { 'w': 30, 'h': 18 };
-
     const user = getSatelliteUser(sat);
     const color = USER_COLOR_MAP[user];
 
     p.fill(WING_COLOR);
 
-    const yPos = y - (wing.h / 2);
-    p.rect(x - wing.w - radius / 2, yPos, wing.w, wing.h, 3);
-    p.rect(x + radius / 2, yPos, wing.w, wing.h, 3);
+    const yPos = y - (satelliteWing.h / 2);
+    p.rect(x - satelliteWing.w - satelliteRadius / 2, yPos, satelliteWing.w, satelliteWing.h, 3);
+    p.rect(x + satelliteRadius / 2, yPos, satelliteWing.w, satelliteWing.h, 3);
     p.fill(p.color(color[0]));
-    p.ellipse(x, y, radius, radius);
+    p.ellipse(x, y, satelliteRadius, satelliteRadius);
     p.fill(p.color(color[1]));
-    p.ellipse(x, y, radius * .8, radius * .8);
+    p.ellipse(x, y, satelliteRadius * .8, satelliteRadius * .8);
     p.fill('white');
     p.ellipse(x, y, 2, 2);
 
     const launchYear = sat.launchYear;
     // Add STRIPES
     if (launchYear <= 1979) {
-      p.rect(x - wing.w * 2 / 3 - radius / 2 + 3, y - (wing.h / 2), 3, wing.h);
+      p.rect(x - satelliteWing.w * 2 / 3 - satelliteRadius / 2 + 3, y - (satelliteWing.h / 2), 3, satelliteWing.h);
     }
     if (launchYear <= 1989) {
-      p.rect(x - wing.w * 1 / 3 - radius / 2, y - (wing.h / 2), 3, wing.h);
+      p.rect(x - satelliteWing.w * 1 / 3 - satelliteRadius / 2, y - (satelliteWing.h / 2), 3, satelliteWing.h);
     }
     if (launchYear <= 1999) {
-      p.rect(x + wing.w * 1 / 3 + radius / 2, y - (wing.h / 2), 3, wing.h);
+      p.rect(x + satelliteWing.w * 1 / 3 + satelliteRadius / 2, y - (satelliteWing.h / 2), 3, satelliteWing.h);
     }
     if (launchYear <= 2009) {
-      p.rect(x + wing.w * 2 / 3 + radius / 2 - 3, y - (wing.h / 2), 3, wing.h);
+      p.rect(x + satelliteWing.w * 2 / 3 + satelliteRadius / 2 - 3, y - (satelliteWing.h / 2), 3, satelliteWing.h);
     }
   }
 
@@ -213,35 +214,39 @@ export default function sketch(p) {
     p.pop();
   }
 
+  const getIsMouseOnSatellite = (i,j) => {
+    /* Given a satellite at nested index [i][j],
+      return boolean indicating whether mouse
+       is over that satellite.*/
+    const satX = x[i][j];
+    const satY = y[i][j];
+    const isMouseOnSatellite = (
+      p.mouseX - MARGIN >= satX - satelliteWing.w - satelliteRadius / 2 &&
+      p.mouseX - MARGIN <= satX + satelliteRadius / 2 + satelliteWing.w &&
+      p.mouseY - MARGIN >= satY - (satelliteWing.h / 2) &&
+      p.mouseY - MARGIN <= satY + (satelliteWing.h / 2));
+
+    return isMouseOnSatellite;
+  }
 
   const drawTooltip = () => {
-    const margin = MARGIN;
-    const wing = { 'w': 30, 'h': 18 };
-    const radius = 20;
 
-    const rectColor = p.color('rgba(10,10,10,.8)');
-
+    const tooltipBackgroundColor = p.color('rgba(10,10,10,.8)');
     // TODO: speed up the element lookup with a d3 quadtree
     for (const i in cats) {
       for (const j in cats[i]) {
-        p.fill(rectColor);
+        p.fill(tooltipBackgroundColor);
         p.noStroke();
 
-        const satX = x[i][j];
-        const satY = y[i][j];
-        const cat = cats[i][j];
-
-        const isMouseOnSatellite = (
-          p.mouseX - margin >= satX - wing.w - radius / 2 &&
-          p.mouseX - margin <= satX + radius / 2 + wing.w &&
-          p.mouseY - margin >= satY - (wing.h / 2) &&
-          p.mouseY - margin <= satY + (wing.h / 2));
-
+        const isMouseOnSatellite = getIsMouseOnSatellite(i,j);
         if (isMouseOnSatellite) {
+
           const boxAnchorX = p.mouseX;
           const boxAnchorY = p.mouseY;
 
-          var maxLength = cat.operator_owner.length;
+          const satellite = cats[i][j];
+
+          var maxLength = satellite.operator_owner.length;
           var rectWidth = (maxLength > 20 ? 250 + 5 * maxLength : 300);
           p.rect(boxAnchorX - 150, boxAnchorY - 200, rectWidth, 140, 10);
 
@@ -249,14 +254,14 @@ export default function sketch(p) {
           p.textSize(20);
           p.textStyle(p.BOLD);
 
-          p.text(cat.satname, boxAnchorX - 135, boxAnchorY - 170);
+          p.text(satellite.satname, boxAnchorX - 135, boxAnchorY - 170);
           p.fill(255);
           p.textSize(16);
           p.textStyle(p.NORMAL);
-          p.text('operator:\t\t\t\t' + cat.operator_owner, boxAnchorX - 135, boxAnchorY - 150);
-          p.text('country:\t\t\t\t\t' + cat.country_org_of_un_registry, boxAnchorX - 135, boxAnchorY - 130);
-          p.text('launch mass:\t' + cat.launch_mass_kg + ' kg', boxAnchorX - 135, boxAnchorY - 110);
-          p.text('launch date: \t' + cat.launchDate, boxAnchorX - 135, boxAnchorY - 90);
+          p.text('operator:\t\t\t\t' + satellite.operator_owner, boxAnchorX - 135, boxAnchorY - 150);
+          p.text('country:\t\t\t\t\t' + satellite.country_org_of_un_registry, boxAnchorX - 135, boxAnchorY - 130);
+          p.text('launch mass:\t' + satellite.launch_mass_kg + ' kg', boxAnchorX - 135, boxAnchorY - 110);
+          p.text('launch date: \t' + satellite.launchDate, boxAnchorX - 135, boxAnchorY - 90);
 
           return; // bail out early
         }
