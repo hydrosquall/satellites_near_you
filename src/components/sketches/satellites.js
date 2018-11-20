@@ -229,7 +229,7 @@ export default function sketch(p) {
 
         const satX = x[i][j];
         const satY = y[i][j];
-        const cat = cats[i][j];
+        const satellite = cats[i][j];
 
         const isMouseOnSatellite = (
           p.mouseX - margin >= satX - wing.w - radius / 2 &&
@@ -241,7 +241,7 @@ export default function sketch(p) {
           const boxAnchorX = p.mouseX;
           const boxAnchorY = p.mouseY;
 
-          var maxLength = cat.operator_owner.length;
+          var maxLength = satellite.operator_owner.length;
           var rectWidth = (maxLength > 20 ? 250 + 5 * maxLength : 300);
           p.rect(boxAnchorX - 150, boxAnchorY - 200, rectWidth, 140, 10);
 
@@ -249,14 +249,14 @@ export default function sketch(p) {
           p.textSize(20);
           p.textStyle(p.BOLD);
 
-          p.text(cat.satname, boxAnchorX - 135, boxAnchorY - 170);
+          p.text(satellite.satname, boxAnchorX - 135, boxAnchorY - 170);
           p.fill(255);
           p.textSize(16);
           p.textStyle(p.NORMAL);
-          p.text('operator:\t\t\t\t' + cat.operator_owner, boxAnchorX - 135, boxAnchorY - 150);
-          p.text('country:\t\t\t\t\t' + cat.country_org_of_un_registry, boxAnchorX - 135, boxAnchorY - 130);
-          p.text('launch mass:\t' + cat.launch_mass_kg + ' kg', boxAnchorX - 135, boxAnchorY - 110);
-          p.text('launch date: \t' + cat.launchDate, boxAnchorX - 135, boxAnchorY - 90);
+          p.text('operator:\t\t\t\t' + satellite.operator_owner, boxAnchorX - 135, boxAnchorY - 150);
+          p.text('country:\t\t\t\t\t' + satellite.country_org_of_un_registry, boxAnchorX - 135, boxAnchorY - 130);
+          p.text('launch mass:\t' + satellite.launch_mass_kg + ' kg', boxAnchorX - 135, boxAnchorY - 110);
+          p.text('launch date: \t' + satellite.launchDate, boxAnchorX - 135, boxAnchorY - 90);
 
           return; // bail out early
         }
