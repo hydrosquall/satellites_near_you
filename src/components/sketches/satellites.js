@@ -213,33 +213,44 @@ export default function sketch(p) {
     p.pop();
   }
 
+  const getIsMouseOnSatellite = (i,j) => {
+    /* Given a satellite at nested index [i][j],
+      return boolean indicating whether mouse
+       is over that satellite.*/
 
-  const drawTooltip = () => {
+    // TODO: pull these params up to app level constants
     const margin = MARGIN;
     const wing = { 'w': 30, 'h': 18 };
     const radius = 20;
 
-    const rectColor = p.color('rgba(10,10,10,.8)');
+    const satX = x[i][j];
+    const satY = y[i][j];
 
+    const isMouseOnSatellite = (
+      p.mouseX - margin >= satX - wing.w - radius / 2 &&
+      p.mouseX - margin <= satX + radius / 2 + wing.w &&
+      p.mouseY - margin >= satY - (wing.h / 2) &&
+      p.mouseY - margin <= satY + (wing.h / 2));
+
+    return isMouseOnSatellite;
+  }
+
+  const drawTooltip = () => {
+
+    const rectColor = p.color('rgba(10,10,10,.8)');
     // TODO: speed up the element lookup with a d3 quadtree
     for (const i in cats) {
       for (const j in cats[i]) {
         p.fill(rectColor);
         p.noStroke();
 
-        const satX = x[i][j];
-        const satY = y[i][j];
-        const satellite = cats[i][j];
-
-        const isMouseOnSatellite = (
-          p.mouseX - margin >= satX - wing.w - radius / 2 &&
-          p.mouseX - margin <= satX + radius / 2 + wing.w &&
-          p.mouseY - margin >= satY - (wing.h / 2) &&
-          p.mouseY - margin <= satY + (wing.h / 2));
-
+        const isMouseOnSatellite = getIsMouseOnSatellite(i,j);
         if (isMouseOnSatellite) {
+
           const boxAnchorX = p.mouseX;
           const boxAnchorY = p.mouseY;
+
+          const satellite = cats[i][j];
 
           var maxLength = satellite.operator_owner.length;
           var rectWidth = (maxLength > 20 ? 250 + 5 * maxLength : 300);
